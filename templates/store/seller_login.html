@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}LOGIN{% endblock %}
+{% block content %}
+    <link rel="stylesheet" href="{% static 'css/super_blue.css' %}">
+    <div class="login-box-wrapper">
+        <div class="login-box" style="top: 200px !important;">
+            <h2>Login</h2>
+            <form method="post" id="loginForm">
+                <label>username</label>
+                <div class="user-box">
+                    {{ form.username }}
+                </div>
+                <label>password</label>
+                <div class="user-box">
+                    {{ form.password }}
+                </div>
+                {% csrf_token %}
+
+                <a style="color: #fff" onclick="document.getElementById('loginForm').submit();">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                    Login
+                </a>
+                <a href="{% url "Akala:seller_signup" %}">Don't have an account?</a>
+            </form>
+        </div>
+    </div>
+    {% if error_message != "" %}
+    <script>
+        alert('{{ error_message }}');
+    </script>
+{% endif %}
+{% endblock %}

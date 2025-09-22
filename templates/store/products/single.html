@@ -1,0 +1,126 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}
+    {{ product.name }}
+{% endblock %}
+{% block content %}
+    <div class="container" style="background-color:powderblue;">
+        <main class="pt-5">
+            <div class="row g-3 p-4">
+                <div class="col-md-5 col-lg-5 order-md-first bg-light">
+                    <img class="img-fluid mx-auto d-block p-4 " width="200px" alt="Responsive image" {% if product.image %}
+                         src="{{ product.image.url }}" {% else %}
+                         src="{% static "images/f362733f-f3fc-4c8f-9c7f-4f5e6ae47feb.png" %}"{% endif %}>
+                    <br>
+
+                    {% if my_price %}
+                        <h2>Price chart</h2>
+                        <div>
+                        </div>
+                        <div>
+
+                        <canvas id="myChart" width="50%" height="50%"></canvas>
+                        </div>
+                        <script type="text/javascript" src="http://code.jquery.com/jquery-1.10.0.min.js"></script>
+                        <script type="text/javascript" src="{% static 'js/Chart.min.js' %}"></script>
+                        <script type="text/javascript">
+                            $.get('{% url "Akala:line_chart_json" slug=product.slug %}', function (data) {
+                                var ctx = $("#myChart").get(0).getContext("2d");
+                                new Chart(ctx, {
+                                    type: 'line', data: data
+                                });
+                            });
+                        </script>
+                        {{ chart }}
+
+                    {% else %}
+                        <h2>
+                            this product doesn't have any data
+                        </h2>
+                    {% endif %}
+                    <br>
+
+                </div>
+
+                <div class="col-md-7 col-lg-7 ps-md-3 ps-lg-5">
+                    <h1 class="mb-0 h4">{{ product.name }}</h1>
+                    <strong><p>available on: <span class="lead">{{ Seller.name }}</span> {{ product.created_by }}</p>
+                    </strong>
+                    <p>{{ product.description|slice:":355" }}...</p>
+                    <div class="border">
+                        <div class="col border-bottom">
+                            <div class="row p-3">
+                                <div class="col-6"><font size="+3">price</font></div>
+                                <div class="col-6 text-end"><span
+                                        class="h4 fw-bold">{% if product.is_discount == True %}
+                                    <s style="color: #808080">${{ product.price }}</s>
+                                    <br>
+                                    <font size="+2"
+                                          style="color: #000000"><strong>${{ product.discounted_price }}</strong></font>
+                                {% else %}${{ product.price }}{% endif %}</span></div>
+                            </div>
+                        </div>
+                        <div class="col">
+                            <div class="row p-3">
+                                <div class="col-6">
+                                    <label for="select">Quantity</label>
+                                    <select id="select" name="quantity">
+                                        <option value="1">1</option>
+                                        <option value="2">2</option>
+                                        <option value="3">3</option>
+                                        <option value="4">4</option>
+                                    </select>
+                                </div>
+                                <div class="col-6 text-end">
+                                    <form method="POST" action="{% url 'Akala:product_detail' product.slug %}">
+                                        {% csrf_token %}
+                                        <button name="add_to_basket" type="submit" id="add-button"
+                                                class="btn btn-secondary btn-sm">Add to
+                                            basket
+                                        </button>
+                                    </form>
+                                </div>
+                                <div class="col-md-12">
+                                    {% with comments as total_comments %}
+                                        <h2>
+                                            comment{{ total_comments|pluralize }}
+                                        </h2>
+                                    {% endwith %}
+                                    {% for comment in comments %}
+                                        Comment by {{ comment.name }}
+                                        on {{ comment.publish }}
+                                        {{ comment.content|linebreaks }}
+                                    {% empty %}
+                                        <p>there are no comments ...yet</p>
+                                    {% endfor %}
+                                    <h2>make a new comment</h2>
+                                    <form id="form" method="post">
+                                        <div class="form-outline mb-4">
+
+                                            <label class="form-label" for="form2Example1">name</label>
+                                            {{ comment_form.name }}
+                                        </div>
+                                        <div class="form-outline mb-4">
+                                            <label class="form-label" for="form2Example1">email</label>
+                                        </div>
+                                        {{ comment_form.email }}
+                                        <div class="form-outline mb-4">
+                                            <label class="form-label" for="form2Example1">content</label>
+
+                                            {{ comment_form.content }}
+                                        </div>
+                                        {% csrf_token %}
+                                        <button name="add_comment" type="submit"
+                                                class="btn-primary btn-lg btn-block">
+                                            Submit
+                                        </button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+{% endblock %}

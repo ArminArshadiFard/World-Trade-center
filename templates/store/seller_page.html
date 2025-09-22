@@ -1,0 +1,347 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}SELLER PAGE{% endblock %}
+{% block content %}
+
+    <!DOCTYPE html>
+    <html lang="en">
+    <body>
+    <div class="card-body py-5 px-md-5">
+
+        <h2 style="color: whitesmoke">
+            My Profile
+        </h2>
+        <form style="color: whitesmoke" name="add_product_btn" method="post" enctype="multipart/form-data">
+            <div class="card-body py-5 px-md-5">
+
+                {% csrf_token %}
+
+                {{ form.as_p }}
+                <button type="submit" name="submit">
+                    Add product
+                </button>
+            </div>
+        </form>
+    </div>
+
+    <div class="album py-5 bg-light">
+        <div class="container">
+
+            <div class="pb-3 h5">All items</div>
+            <div class="row row-cols-1 row-cols-sm-2 row-cols-md-5 g-3">
+
+                {% for p in products %}
+
+                    <div class="col">
+                        <div class="card shadow-sm">
+                            <img class="img-fluid" alt="Responsive image" {% if p.image %}
+                                 src="{{ p.image.url }}" {% else %}
+                                 src="{% static "images/f362733f-f3fc-4c8f-9c7f-4f5e6ae47feb.png" %}"{% endif %}>
+                            <div class="card-body">
+                                <p class="card-text">
+                                    <a class="text-dark text-decoration-none"
+                                       href="{{ p.get_absolute_url }}">{{ p.name }}</a>
+                                </p>
+                                <div class="d-flex justify-content-between align-items-center">
+
+                                    <small class="text-muted">{% if p.is_discount == True %}
+                                        <s style="color: #808080">${{ p.price }}</s>
+                                        <br>
+                                        <font size="+2"
+                                              style="color: #000000"><strong>${{ p.discounted_price }}</strong></font>
+                                    {% else %}<font size="+2"> ${{ p.price }}{% endif %}</font></small>
+                                </div>
+                                <a href="{% url "Akala:delete_product" slug=p.slug %}" class="btn btn-danger m-1">DElETE
+                                </a>
+
+                                <a href="{% url 'Akala:edit_product' slug=p.slug %}" class="btn btn-danger m-1">EDIT
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+            <br>
+
+            <h1>money you made: ${{ income }}</h1>
+
+            <div class="p-w-md m-t-sm">
+                <div class="row">
+
+                    <div class="col-sm-4">
+                        <h1 class="m-b-xs">
+                            {{ this_months_sales }}
+                        </h1>
+                        <small>
+                            Sales in current month
+                        </small>
+                        <div id="sparkline1" class="m-b-sm"></div>
+                        <div class="row">
+                            <div class="col-xs-4">
+                                <small class="stats-label">Pages / Visit</small>
+                                <h4>236 321.80</h4>
+                            </div>
+
+                            <div class="col-xs-4">
+                                <small class="stats-label">% New Visits</small>
+                                <h4>46.11%</h4>
+                            </div>
+                            <div class="col-xs-4">
+                                <small class="stats-label">Last week</small>
+                                <h4>432.021</h4>
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="col-sm-4">
+                        <h1 class="m-b-xs">
+                            {{ todays_sales }}
+                        </h1>
+                        <small>
+                            Sales in last 24h
+                        </small>
+                        <div id="sparkline2" class="m-b-sm"></div>
+                        <div class="row">
+                            <div class="col-xs-4">
+                                <small class="stats-label">Pages / Visit</small>
+                                <h4>166 781.80</h4>
+                            </div>
+
+                            <div class="col-xs-4">
+                                <small class="stats-label">% New Visits</small>
+                                <h4>22.45%</h4>
+                            </div>
+                            <div class="col-xs-4">
+                                <small class="stats-label">Last week</small>
+                                <h4>862.044</h4>
+                            </div>
+                        </div>
+
+
+                    </div>
+                    <div class="col-sm-4">
+
+                        <div class="row m-t-xs">
+                            <div class="col-xs-6">
+                                <h5 class="m-b-xs">sales last month</h5>
+                                <h1 class="no-margins">{{ previous_months_sales }}</h1>
+                                <div class="font-bold text-navy">98% <i class="fa fa-bolt"></i></div>
+                            </div>
+                            <div class="col-xs-6">
+                                <h5 class="m-b-xs">Sales current year</h5>
+                                <h1 class="no-margins">{{ this_years_sales }}</h1>
+                                <div class="font-bold text-navy"><i class="fa fa-bolt"></i></div>
+                            </div>
+                        </div>
+
+
+                        <table class="table small m-t-sm">
+                            <tbody>
+                            <tr>
+                                <td>
+                                    <strong>142</strong> Projects
+
+                                </td>
+                                <td>
+                                    <strong>22</strong> Messages
+                                </td>
+
+                            </tr>
+                            <tr>
+                                <td>
+                                    <strong>61</strong> Comments
+                                </td>
+                                <td>
+                                    <strong>54</strong> Articles
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <strong>154</strong> Companies
+                                </td>
+                                <td>
+                                    <strong>32</strong> Clients
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+
+
+                    </div>
+
+                </div>
+                <label for="dataSelector"></label><select id="dataSelector">
+                <option value="yearly">Yearly Data</option>
+                <option value="monthly">Monthly Data</option>
+                <option value="weekly">Weekly Data</option>
+                <!-- Add more options if you have other data sets -->
+            </select>
+
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="small pull-left col-md-3 m-l-lg m-t-md">
+                        </div>
+                        <div class="small pull-right col-md-3 m-t-md text-right">
+
+                        </div>
+
+                        <div class="flot-chart m-b-xl">
+                            <div class="flot-chart-content" id="flot-dashboard5-chart"></div>
+                        </div>
+                    </div>
+                </div>
+
+
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="ibox">
+
+
+                            <div class="ibox-content">
+
+                                <div class="row">
+                                    <div class="row align-items-center">
+
+                                        <div class="col-sm-4">
+                                            <div class="form-group">
+                                                <h3><label class="control-label" for="status">Product name</label></h3>
+                                            </div>
+
+                                        </div>
+
+                                        <div class="col-sm-2">
+                                            <h3><label class="control-label" for="status">price sold</label></h3>
+
+                                        </div>
+                                        <div class="col-sm-2">
+                                            <h3><label class="control-label" for="status">date sold</label></h3>
+
+                                        </div>
+                                        <div class="col-sm-4">
+
+                                        </div>
+                                    </div>
+                                </div>
+                                {{ today }}
+                                <br>
+                                <div class="table-responsive">
+                                    <table class="table table-striped">
+
+                                        {% if what_seller_sold %}
+
+                                            {% for sells in what_seller_sold %}
+
+                                                <tr>
+                                                    <td>1</td>
+                                                    <td>{{ sells.products_sold.name }}</td>
+                                                    <td>{{ sells.price_sold }}</td>
+                                                    <td>{{ sells.date_sold }}</td>
+                                                    <td></td>
+                                                    <td><strong></strong></td>
+                                                    <td></td>
+                                                    <td><a href="#"><i class="fa fa-check text-navy"></i></a></td>
+                                                </tr>
+
+                                            {% endfor %}
+                                        {% endif %}
+
+
+                                    </table>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+
+        </div>
+    </div>
+
+    </body>
+    <script src="/static/js/jquery-3.1.1.min.js"></script>
+    <script src="/static/js/bootstrap.min.js"></script>
+    <script src="/static/js/plugins/metisMenu/jquery.metisMenu.js"></script>
+    <script src="/static/js/plugins/slimscroll/jquery.slimscroll.min.js"></script>
+
+    <!-- Flot -->
+    <script src="/static/js/plugins/flot/jquery.flot.js"></script>
+    <script src="/static/js/plugins/flot/jquery.flot.tooltip.min.js"></script>
+    <script src="/static/js/plugins/flot/jquery.flot.spline.js"></script>
+    <script src="/static/js/plugins/flot/jquery.flot.resize.js"></script>
+    <script src="/static/js/plugins/flot/jquery.flot.pie.js"></script>
+    <script src="/static/js/plugins/flot/jquery.flot.symbol.js"></script>
+    <script src="/static/js/plugins/flot/jquery.flot.time.js"></script>
+
+    <!-- Custom and plugin javascript -->
+    <script src="/static/js/inspinia.js"></script>
+    <script src="/static/js/plugins/pace/pace.min.js"></script>
+
+    <!-- Sparkline -->
+    <script src="/static/js/plugins/sparkline/jquery.sparkline.min.js"></script>
+
+
+    <script>
+        // Define the data variables for yearly and monthly data
+        var yearlyData = {{ yearly_data }};
+        var monthlyData = {{ monthly_data }};
+        var weeklyData = {{ weekly_data }};
+
+        // Function to update the chart with the selected data
+        function updateChart(selectedData) {
+            $("#flot-dashboard5-chart").empty();
+            $.plot($("#flot-dashboard5-chart"), [selectedData], {
+                // Your chart configuration here
+                series: {
+                    lines: {
+                        show: false,
+                        fill: true
+                    },
+                    splines: {
+                        show: true,
+                        tension: 0.4,
+                        lineWidth: 1,
+                        fill: 0.4
+                    },
+                    points: {
+                        radius: 0,
+                        show: true
+                    },
+                    shadowSize: 2
+                },
+                grid: {
+                    hoverable: true,
+                    clickable: true,
+                    borderWidth: 2,
+                    color: 'transparent'
+                },
+                colors: ["#1ab394", "#1C84C6"],
+                xaxis: {interval: 0},
+                yaxis: {},
+                tooltip: false
+            });
+        }
+
+        // Initial chart with yearly data
+        updateChart(yearlyData);
+
+        // Event handler for the dropdown change
+        $("#dataSelector").on("change", function () {
+            var selectedValue = $(this).val();
+            if (selectedValue === "yearly") {
+                updateChart(yearlyData);
+            }
+            if (selectedValue === "weekly") {
+                updateChart(weeklyData);
+            } else if (selectedValue === "monthly") {
+                updateChart(monthlyData);
+            }
+            // Add more conditions for other data sets if needed
+        });
+    </script>
+
+
+    </html>
+{% endblock %}

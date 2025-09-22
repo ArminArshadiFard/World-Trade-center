@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}SELLER PAGE{% endblock %}
+{% block content %}
+
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>Title</title>
+    </head>
+    <body>
+    <h2>
+        all the products listed by {{ seller.name }}
+    </h2>
+    <form action="" method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        {{ form }}
+        <button type="submit" name="Edit">
+            Edit
+        </button>
+
+    </form>
+    </body>
+    </html>
+{% endblock %}

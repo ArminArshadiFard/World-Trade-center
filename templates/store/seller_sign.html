@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}SIGN UP{% endblock %}
+{% block content %}
+<link rel="stylesheet" href="{% static 'css/super_blue.css' %}">
+    <div class="login-box" style="top: 300px !important;">
+        <h2>Sign up</h2>
+        <form method="post" id="signupForm">
+            <label>username</label>
+            <div class="user-box">
+                {{ form.username }}
+            </div>
+            <label>email</label>
+            <div class="user-box">
+                {{ form.email }}
+            </div>
+            <label>password</label>
+            <div class="user-box">
+                {{ form.password1 }}
+            </div>
+            <label>confirm password</label>
+            <div class="user-box">
+                {{ form.password2 }}
+            </div>
+            {% csrf_token %}
+
+            <a style="color: #fff" onclick="document.getElementById('signupForm').submit();">
+                <span></span>
+                <span></span>
+                <span></span>
+                <span></span>
+                Login
+            </a>
+            <a href="{% url "Akala:login_user" %}">already have an account?</a>
+        </form>
+    </div>
+{% endblock %}

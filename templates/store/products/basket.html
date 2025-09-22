@@ -1,0 +1,122 @@
+{% extends "base.html" %}
+{% load static %}
+{% block content %}
+    <head>
+
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+        <link href="/static/font-awesome/css/font-awesome.css" rel="stylesheet">
+
+        <link href="/static/css/animate.css" rel="stylesheet">
+        <link href="/static/css/style.css" rel="stylesheet">
+        <title> My Basket </title>
+
+    </head>
+
+    <div class="main-content" style="margin-left: 20px; margin-right: 20px;">
+
+        <br>
+        <div style="color: whitesmoke" class="pb-3 h3">Its MR.{{ user }}'s Basket</div>
+
+        {% if products.count != 0 %}
+            <div class="row row-cols-1 row-cols-sm-2 row-cols-md-5 g-3">
+
+            {% for product in products %}
+
+                <div class="col">
+                    <div class="card shadow-sm">
+                        <img class="img-fluid" alt="Responsive image" {% if product.image %}
+                             src="{{ product.image.url }}" {% else %}
+                             src="{% static "images/f362733f-f3fc-4c8f-9c7f-4f5e6ae47feb.png" %}"{% endif %}>
+                        <div class="card-body">
+                            <p class="card-text">
+                                <a class="text-dark text-decoration-none"
+                                   href="{{ product.get_absolute_url }}">{{ product.name }}</a>
+                            </p>
+                            <div class="d-flex justify-content-between align-items-center">
+
+                                <small class="text-muted">{% if product.is_discount == True %}
+                                    <s style="color: #808080">${{ product.price }}</s>
+                                    <br>
+                                    <font size="+2"
+                                          style="color: #000000"><strong>${{ product.discounted_price }}</strong></font>
+                                {% else %}<font size="+2"> ${{ product.price }}{% endif %}</font></small>
+                            </div>
+                            <a href="{% url "Akala:delete_basket_product" slug=product.slug %}"
+                               class="btn btn-danger m-1">DElETE
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        {% else %}
+            <h2>go and buy some products {{ user }}</h2>
+        {% endif %}
+
+        </div>
+
+        <br>
+        <div class="col-md-3">
+
+            <div class="ibox">
+                <div class="ibox-title">
+                    <h5>Cart Summary</h5>
+                </div>
+                <div class="ibox-content">
+                            <span>
+                                Total
+                            </span>
+
+
+                    <h2 class="font-bold">
+                        ${{ total_price }}
+                    </h2>
+
+
+                    <hr/>
+                    <span class="text-muted small">
+                                *For United States, France and Germany applicable sales tax will be applied
+                            </span>
+                    <div class="m-t-sm">
+                        <div class="btn-group">
+                            <a href="{% url "Akala:buy_basket" %}" class="btn btn-primary btn-sm"><i
+                                    class="fa fa-shopping-cart"></i> BUY EM ALL</a>
+                            <a href="{% url "Akala:basket_delete_all" %}"
+                               class="btn btn-white btn-sm"> Cancel</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="ibox">
+                <div class="ibox-title">
+                    <h5>Support</h5>
+                </div>
+                <div class="ibox-content text-center">
+
+
+                    <h3><i class="fa fa-phone"></i> +0936 78 48 199</h3>
+                    <span class="small">
+                                Please contact with us if you have any questions. We are available 24h.
+                </span>
+
+
+                </div>
+            </div>
+
+
+        </div>
+    </div>
+    <br>
+
+    <!-- Mainly scripts -->
+    <script src="/static/js/jquery-3.1.1.min.js"></script>
+    <script src="/static/js/bootstrap.min.js"></script>
+    <script src="/static/js/plugins/metisMenu/jquery.metisMenu.js"></script>
+    <script src="/static/js/plugins/slimscroll/jquery.slimscroll.min.js"></script>
+
+    <!-- Custom and plugin javascript -->
+    <script src="/static/js/inspinia.js"></script>
+    <script src="/static/js/plugins/pace/pace.min.js"></script>
+{% endblock %}
